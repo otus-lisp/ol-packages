@@ -1,13 +1,20 @@
 #!/bin/bash
-REPO=~/.kiss/ol-packages
+REPO="$HOME/.local/share/ol-packages"
+BIN_DIR="$HOME/.local/bin"
 
-git clone https://github.com/yuriy-chumak/ol-packages $REPO
-chmod +x $REPO/kiss
+mkdir -p "$REPO" "$BIN_DIR"
 
-echo "# ol-packages repo setup" >>~/.bashrc
-export KISS_PATH=$KISS_PATH:$REPO
-echo "export KISS_PATH=$KISS_PATH:$REPO" >>~/.bashrc
-export PATH=$PATH:$REPO
-echo "export PATH=\$PATH:$REPO" >>~/.bashrc
+git clone https://github.com/otus-lisp/ol-packages "$REPO"
+chmod +x "$REPO/olpm"
+ln -sf "$REPO/olpm" "$BIN_DIR/olpm"
 
-kiss update
+echo ""                         >> "$HOME/.bashrc"
+echo "# ol-packages repo setup" >> "$HOME/.bashrc"
+echo "export OLPM_PATH=$REPO"   >> "$HOME/.bashrc"
+
+if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
+    echo "Warning: $BIN_DIR is not in your PATH. Add 'export PATH=\$PATH:\$HOME/.local/bin' to your shell profile."
+fi
+
+export OLPM_PATH="$REPO"
+$REPO/olpm update

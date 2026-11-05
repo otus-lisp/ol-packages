@@ -1,17 +1,16 @@
 #!/bin/bash
-REPO=~/.kiss/ol-packages
-
 PWD=`pwd`
+REPO="$PWD/ol-packages"
 mkdir -p $REPO
 cd $REPO
 
-curl -fsSL https://github.com/yuriy-chumak/ol-packages/archive/refs/tags/0.3.tar.gz| tar -xz --strip-components=1
-chmod +x $REPO/kiss # sanity chmod
+curl -fsSL https://github.com/otus-lisp/ol-packages/archive/refs/heads/master.tar.gz| tar -xz --strip-components=1
+chmod +x olpm # sanity chmod
 
-echo "# ol-packages repo setup (venv)" >>~/.bashrc
-export KISS_PATH=$KISS_PATH:$REPO
-echo "export KISS_PATH=$KISS_PATH:$REPO" >>~/.bashrc
+echo "# ol-packages repo setup (venv)" >>activate
+echo "export OLPM_PATH=$REPO"   >>activate
+echo "export PATH=\$PATH:$REPO" >>activate
+
+export OLPM_PATH=$REPO
 export PATH=$PATH:$REPO
-echo "export PATH=\$PATH:$REPO" >>~/.bashrc
-
 cd $PWD

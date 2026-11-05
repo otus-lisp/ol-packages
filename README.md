@@ -1,28 +1,28 @@
 OL-PACKAGES REPOSITORY
 ======================
 
-An [Otus Lisp](https://github.com/yuriy-chumak/ol) Packages Repository, with the [kiss](https://kisslinux.org/package-manager) package manager as a management tool.
+[Otus Lisp](https://github.com/yuriy-chumak/ol) Packages Repository, featuring the [olpm (formerly kiss)](https://kisslinux.org/package-manager) package manager as its management tool.
 
 
-INSTALL "KISS"
+INSTALL "OLPM"
 --------------
 
 ### Automatic install
 
-Note: `git` required.
+Note: `git` tool required.
 ```bash
-source <(curl -fsSL https://raw.githubusercontent.com/yuriy-chumak/ol-packages/master/install.sh)
+source <(curl -fsSL https://raw.githubusercontent.com/otus-lisp/ol-packages/master/install.sh)
 ```
 
 Paste that in a shell prompt and run.
 
-### VirtualEnv install
+### Virtual Env install
 
-This install does not require `git`, but is not able of updating the repository to the latest changes.
-Designed to be used as a "virtual" ol environment.
+This installation method does not require `git`, but cannot update the repository to the latest changes.
+Designed to be used inside an ol virtual environment.
 
 ```bash
-source <(curl -fsSL https://raw.githubusercontent.com/yuriy-chumak/ol-packages/master/install-venv.sh)
+source <(curl -fsSL https://raw.githubusercontent.com/otus-lisp/ol-packages/master/install-venv.sh)
 ```
 
 Paste that in a shell prompt and run.
@@ -37,11 +37,11 @@ UNINSTALL
 - Remove next lines from the `$USER/.bashrc` file:
   ```
   # ol-packages repo setup
-  export KISS_PATH=:/home/...
+  export OLPM_PATH=:/home/...
   export PATH=$PATH:/home/...
   ```
-- Completely remove folder `$USER/.kiss` (repository files),
-- Completely remove folder `$USER/.cache/kiss` (intermediate files and artifacts),
+- Completely remove folder `$USER/.cache/olpm` (intermediate files and artifacts),
+- Completely remove folder `$USER/.local/share/ol-packages` (intermediate files and artifacts),
 - Restart terminal console.
 
 
@@ -50,12 +50,12 @@ USAGE
 
 - Install package
   ```bash
-  $ kiss build package-name
+  $ olpm build package-name
   ```
 
   Example:
   ```
-  $ kiss build libol-soloud
+  $ olpm build libol-soloud
   -> Building: explicit: libol-soloud
   -> Checking for pre-built dependencies
   -> libol-soloud Reading sources
@@ -82,19 +82,7 @@ USAGE
   -- Installing: /home/$USER/.cache/kiss/proc/26208/pkg/libol-soloud/usr/local/share/SoLoud/cmake/soloud-config-noconfig.cmake
   -> libol-soloud Successfully built package
   -> libol-soloud Generating manifest
-  -> libol-soloud Stripping binaries and libraries
-  strip -s -R .comment -R .note /home/$USER/.cache/kiss/proc/26208/pkg/libol-soloud/usr/local/lib64/libsoloud.so
-  -> libol-soloud looking for dependencies (using readelf)
-  -> libol-soloud Generating etcsums
-  -> libol-soloud Creating tarball
-  -> libol-soloud Successfully created tarball
-  -> Install built packages? [libol-soloud]
-  -> Continue?: Press Enter to continue or Ctrl+C to abort
-
-  Using /usr/bin/sudo (to become root)
-  [sudo] password for $USER:
-  -> libol-soloud Checking if manifest valid
-  -> libol-soloud Checking if package installable
+  .........
   -> libol-soloud Checking for package conflicts
   -> libol-soloud Installing package (libol-soloud@20200207-2.tar.gz)
   -> libol-soloud Installed successfully
@@ -102,12 +90,12 @@ USAGE
 
 - Uninstall package
   ```bash
-  $ kiss remove package-name
+  $ olpm remove package-name
   ```
 
   Example:
   ```
-  $ kiss remove libol-soloud
+  $ olpm remove libol-soloud
   Using /usr/bin/sudo (to become root)
   -> libol-soloud Checking if package removable
   -> libol-soloud Removing package
@@ -117,4 +105,4 @@ USAGE
 BTW
 ---
 
-* Run "kiss update" to keep repository up-to-date periodically.
+* Run "olpm update" to keep repository up-to-date periodically.
