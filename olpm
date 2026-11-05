@@ -292,7 +292,7 @@ _pkg_find() {
 
     unset IFS
 
-    # Show all search results if called from 'kiss search', else store the
+    # Show all search results if called from 'olpm search', else store the
     # values in variables. If there are 4 arguments, no package has been found.
     case $2-$# in
         *-4) return 1 ;;
@@ -411,7 +411,7 @@ pkg_source() {
         # arg4: resolved source
         run_hook pre-source "$1" "$src" "$_fnr"
 
-        # '$2' is set when this function is called from 'kiss c' and it is used
+        # '$2' is set when this function is called from 'olpm c' and it is used
         # here to skip calling the Git code.
         case $2$_res in "$2url+"*|git+*)
             mkcd "${_des%/*}"
@@ -578,7 +578,7 @@ pkg_depends() {
 
 pkg_order() {
     # Order a list of packages based on dependence and take into account
-    # pre-built tarballs if this is to be called from 'kiss i'.
+    # pre-built tarballs if this is to be called from 'olpm i'.
     unset order redro deps
 
     for pkg do case $pkg in
@@ -1125,8 +1125,8 @@ pkg_conflicts() {
 
     # Enable alternatives automatically if it is safe to do so.
     # This checks to see that the package that is about to be installed
-    # doesn't overwrite anything it shouldn't in '/var/db/kiss/installed'.
-    grep -q ":/var/db/kiss/installed/" "$_tmp_file" || safe=1
+    # doesn't overwrite anything it shouldn't in '/var/db/olpm/installed'.
+    grep -q ":/var/db/olpm/installed/" "$_tmp_file" || safe=1
 
     if ! equ "$OLPM_CHOICE" 1 && equ "$safe" 1 && [ -s "$_tmp_file" ]; then
         # This is a novel way of offering an "alternatives" system.
@@ -1141,7 +1141,7 @@ pkg_conflicts() {
         # The package's manifest is then updated to reflect this
         # new location.
         #
-        # The 'kiss alternatives' command parses this directory and
+        # The 'olpm alternatives' command parses this directory and
         # offers you the CHOICE of *swapping* entries in this
         # directory for those on the filesystem.
         #
@@ -1170,7 +1170,7 @@ pkg_conflicts() {
             }
         done < "$_tmp_file"
 
-        log "$_pkg" "Converted all conflicts to choices (kiss a)"
+        log "$_pkg" "Converted all conflicts to choices (olpm a)"
 
         # Rewrite the package's manifest to update its location
         # to its new spot (and name) in the choices directory.
@@ -1178,7 +1178,7 @@ pkg_conflicts() {
 
     elif [ -s "$_tmp_file" ]; then
         log "Package '$_pkg' conflicts with another package" "" "!>"
-        log "Run 'OLPM_CHOICE=1 kiss i $_pkg' to add conflicts" "" "!>"
+        log "Run 'OLPM_CHOICE=1 olpm i $_pkg' to add conflicts" "" "!>"
         die "as alternatives." "" "!>"
     fi
 }
@@ -1646,7 +1646,7 @@ pkg_upgrade() {
 
         # Detect repository orphans (installed packages with no
         # associated repository).
-        case $repo_dir in */var/db/kiss/installed/*)
+        case $repo_dir in */var/db/olpm/installed/*)
             _repo_orp="$_repo_orp$newline${pkg##*/}"
         esac
 
@@ -1666,15 +1666,15 @@ pkg_upgrade() {
     build_install=0
     prefer_cache=1
 
-    ! contains "$*" kiss || {
+    ! contains "$*" olpm || {
         log "Detected package manager update"
         log "The package manager will be updated first"
 
         prompt
-        pkg_build_all kiss
+        pkg_build_all olpm
 
         log "Updated the package manager"
-        log "Re-run 'kiss update' to update your system"
+        log "Re-run 'olpm update' to update your system"
         return 0
     }
 
@@ -1705,20 +1705,20 @@ pkg_clean() {
 }
 
 pkg_help_ext() {
-    log 'Installed extensions (kiss-* in PATH)'
+    log 'Installed extensions (olpm-* in PATH)'
 
     # Intentional, globbing disabled.
     # shellcheck disable=2046,2030,2031
-    set -- $(pkg_find kiss-\* all -x "$PATH")
+    set -- $(pkg_find olpm-\* all -x "$PATH")
 
     # To align descriptions figure out which extension has the longest
     # name by doing a simple 'name > max ? name : max' on the basename
-    # of the path with 'kiss-' stripped as well.
+    # of the path with 'olpm-' stripped as well.
     #
     # This also removes any duplicates found in '$PATH', picking the
     # first match.
     for path do 
-        p=${path#*/kiss-}
+        p=${path#*/olpm-}
 
         case " $seen " in *" $p "*)
             shift
@@ -1739,7 +1739,7 @@ pkg_help_ext() {
         { read -r _ && IFS=\#$IFS read -r _ cmt; } <&3
 
         printf "%b->%b %-${max}s %s\\n" \
-            "$c1" "$c3" "${path#*/kiss-}" "$cmt"
+            "$c1" "$c3" "${path#*/olpm-}" "$cmt"
     done >&2
 }
 
@@ -1775,7 +1775,7 @@ args() {
     shift "$(($# != 0))"
 
     # Ensure that arguments do not contain invalid characters. Wildcards can
-    # not be used here as they would conflict with kiss extensions.
+    # not be used here as they would conflict with olpm extensions.
     case $action in
         a|alternatives)
             case $1 in *\**|*\!*|*\[*|*\ *|*\]*|*/*|*"$newline"*)
@@ -1869,7 +1869,7 @@ args() {
         v|version)      printf '5.5.28\n' ;;
 
         '')
-            log 'kiss [a|b|c|d|i|l|r|s|u|U|v] [pkg]...'
+            log 'olpm [a|b|c|d|i|l|r|s|u|U|v] [pkg]...'
             log 'alternatives List and swap alternatives'
             log 'build        Build packages'
             log 'checksum     Generate checksums'
@@ -1882,14 +1882,14 @@ args() {
             log 'upgrade      Update the system'
             log 'version      Package manager version'
 
-            printf '\nRun "kiss [H|help-ext]" to see all actions\n'
+            printf '\nRun "olpm [H|help-ext]" to see all actions\n'
         ;;
 
         *)
             # _OLPM_LVL must be reset here so the that any extensions
             # which call the package manager do not increment the value
             # further than the parent instance.
-            pkg_find "kiss-$action*" "" -x "$PATH"
+            pkg_find "olpm-$action*" "" -x "$PATH"
             _OLPM_LVL=0 "$repo_dir" "$@"
         ;;
     esac
@@ -1904,12 +1904,12 @@ create_tmp_dirs() {
     mkdir -p "$OLPM_ROOT/" 2>/dev/null || :
 
     # System package database.
-    sys_db=$OLPM_ROOT/${pkg_db:=var/db/kiss/installed}
-    sys_ch=$OLPM_ROOT/${cho_db:=var/db/kiss/choices}
+    sys_db=$OLPM_ROOT/${pkg_db:=var/db/olpm/installed}
+    sys_ch=$OLPM_ROOT/${cho_db:=var/db/olpm/choices}
 
     # Top-level cache directory.
     cac_dir=${XDG_CACHE_HOME:-"${HOME%"${HOME##*[!/]}"}/.cache"}
-    cac_dir=${cac_dir%"${cac_dir##*[!/]}"}/kiss
+    cac_dir=${cac_dir%"${cac_dir##*[!/]}"}/olpm
 
     # Persistent cache directories.
     src_dir=$cac_dir/sources
