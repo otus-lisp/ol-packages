@@ -1,7 +1,7 @@
 OL-PACKAGES REPOSITORY
 ======================
 
-[Otus Lisp](https://github.com/yuriy-chumak/ol) Packages Repository, featuring the [olpm (formerly kiss)](https://kisslinux.org/package-manager) package manager as its management tool.
+[Otus Lisp](https://github.com/yuriy-chumak/ol) Packages Repository, featuring the olpm (formerly [kiss](https://kisslinux.github.io/wiki/package-manager)) package manager as its management tool.
 
 
 INSTALL "OLPM"
@@ -9,23 +9,24 @@ INSTALL "OLPM"
 
 ### Automatic install
 
-Note: `git` tool required.
+Note: `git`, `curl`, `openssl`, `tar`, `gzip`  tools required.
 ```bash
 source <(curl -fsSL https://raw.githubusercontent.com/otus-lisp/ol-packages/master/install.sh)
 ```
 
 Paste that in a shell prompt and run.
 
-### Virtual Env install
+### ~~Virtual Env install~~
+Will be reworked soon.
 
-This installation method does not require `git`, but cannot update the repository to the latest changes.
-Designed to be used inside an ol virtual environment.
+~~This installation method does not require `git`, but cannot update the repository to the latest changes.~~
+~~Designed to be used inside an ol virtual environment.~~
 
 ```bash
 source <(curl -fsSL https://raw.githubusercontent.com/otus-lisp/ol-packages/master/install-venv.sh)
 ```
 
-Paste that in a shell prompt and run.
+~~Paste that in a shell prompt and run.~~
 
 ### Alternative (manual) install
 
@@ -37,8 +38,7 @@ UNINSTALL
 - Remove next lines from the `$USER/.bashrc` file:
   ```
   # ol-packages repo setup
-  export OLPM_PATH=:/home/...
-  export PATH=$PATH:/home/...
+  export OLPM_PATH=/home/...
   ```
 - Completely remove folder `$USER/.cache/olpm` (intermediate files and artifacts),
 - Completely remove folder `$USER/.local/share/ol-packages` (intermediate files and artifacts),
@@ -48,7 +48,7 @@ UNINSTALL
 USAGE
 -----
 
-- Install package
+- Build (and Install) package
   ```bash
   $ olpm build package-name
   ```

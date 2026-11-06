@@ -1,8 +1,7 @@
 #!/bin/bash
 PWD=`pwd`
-REPO="$PWD/ol-packages"
-mkdir -p $REPO
-cd $REPO
+REPO="$PWD/.venv/ol-packages"
+mkdir -p $REPO; cd $REPO
 
 curl -fsSL https://github.com/otus-lisp/ol-packages/archive/refs/heads/master.tar.gz| tar -xz --strip-components=1
 chmod +x olpm # sanity chmod
